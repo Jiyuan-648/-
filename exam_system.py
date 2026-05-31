@@ -1,3 +1,4 @@
+import random
 from student import Student
 
 
@@ -41,3 +42,44 @@ class ExamSys:
             print(f"成功加载 {len(self.students)} 名学生信息。")
         except FileNotFoundError:
             print(f"错误：找不到文件 '{filename}'，请确认文件已放置在程序根目录下。")
+
+    def find_student(self):
+        """
+        查询学生信息：用户输入学号，系统查找并打印该学生的完整信息。
+        如果学号不存在则给出友好错误提示。
+        """
+        student_id = input("请输入要查询的学号：").strip()
+        for stu in self.students:
+            if stu.student_id == student_id:
+                print("\n查询结果：")
+                print(stu)
+                return
+        # 遍历完未找到则提示错误
+        print(f"未找到该学号对应的学生，请检查输入是否正确。")
+
+    def random_roll_call(self):
+        """
+        随机点名：用户输入需要点名的学生数量，
+        系统返回对应数量的不重复随机学生名单（姓名+学号）。
+        使用try-except处理输入中的各种边界情况。
+        """
+        user_input = input("请输入需要点名的学生数量：").strip()
+        try:
+            n = int(user_input)
+        except ValueError:
+            print("输入错误：请输入一个有效的数字。")
+            return
+
+        if n <= 0:
+            print("输入错误：点名人数必须大于0。")
+            return
+
+        if n > len(self.students):
+            print(f"输入错误：点名人数（{n}）超过了学生总人数（{len(self.students)}）。")
+            return
+
+        # 使用random.sample实现不重复随机抽取
+        selected = random.sample(self.students, n)
+        print("\n本次随机点名结果：")
+        for i, stu in enumerate(selected, 1):
+            print(f"{i}. {stu.name} {stu.student_id}")
