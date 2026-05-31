@@ -121,3 +121,40 @@ class ExamSys:
                 f.write(f"姓名:{stu.name}\n")
                 f.write(f"学号:{stu.student_id}\n")
         print(f"准考证文件已生成，共 {len(self.arranged_students)} 份，请查看 '{dirname}/' 文件夹。")
+
+    def run(self):
+        """
+        系统主菜单循环：显示功能菜单，接收用户输入的功能编号，
+        调用对应的功能函数。输入0退出系统，输入非法编号则给出提示。
+        功能编号映射：
+          1 → 查询学生信息
+          2 → 随机点名
+          3 → 生成考场安排表
+          4 → 生成准考证文件
+          0 → 退出系统
+        """
+        menu = (
+            "===== 学生信息与考场管理系统 =====\n"
+            "1. 查询学生信息\n"
+            "2. 随机点名\n"
+            "3. 生成考场安排表\n"
+            "4. 生成准考证文件\n"
+            "+----------------------------------------+\n"
+            "0. 退出系统\n"
+        )
+        while True:
+            print("\n" + menu)
+            choice = input("请输入功能编号：").strip()
+            if choice == "1":
+                self.find_student()
+            elif choice == "2":
+                self.random_roll_call()
+            elif choice == "3":
+                self.generate_exam_arrangement()
+            elif choice == "4":
+                self.generate_admission_tickets()
+            elif choice == "0":
+                print("感谢使用，再见！")
+                break
+            else:
+                print("功能编号不存在，请正确输入功能编号（0～4）：")
