@@ -1,3 +1,4 @@
+import os
 import random
 from student import Student
 
@@ -83,3 +84,40 @@ class ExamSys:
         print("\n本次随机点名结果：")
         for i, stu in enumerate(selected, 1):
             print(f"{i}. {stu.name} {stu.student_id}")
+
+    def generate_exam_arrangement(self):
+        """
+        生成考场安排表：将全班学生顺序随机打乱，
+        在程序根目录下输出"考场安排表.txt"，
+        每一行格式：考场座位号,姓名,学号
+        """
+        # 打乱学生列表副本，不影响原始列表
+        self.arranged_students = self.students[:]
+        random.shuffle(self.arranged_students)
+        filename = "考场安排表.txt"
+        with open(filename, "w", encoding="utf-8") as f:
+            for i, stu in enumerate(self.arranged_students, 1):
+                f.write(f"{i},{stu.name},{stu.student_id}\n")
+        print(f"考场安排表已生成，共 {len(self.arranged_students)} 名学生，请查看 '{filename}'。")
+
+    def generate_admission_tickets(self):
+        """
+        生成准考证：在程序根目录下创建"准考证"文件夹，
+        根据已生成的考场安排信息，为每名学生生成独立的准考证文件。
+        文件名：座位号.txt，内容包含考场座位号、姓名和学号。
+        如果文件夹已存在则正常覆盖或更新其中的文件（不报错）。
+        """
+        if not self.arranged_students:
+            print("提示：尚未生成考场安排表，正在自动生成...")
+            self.generate_exam_arrangement()
+        # 创建准考证文件夹，exist_ok=True 保证文件夹已存在时不报错
+        dirname = "准考证"
+        os.makedirs(dirname, exist_ok=True)
+        for i, stu in enumerate(self.arranged_students, 1):
+            # 文件名使用座位号，如 1.txt, 2.txt
+            ticket_filename = os.path.join(dirname, f"{i}.txt")
+            with open(ticket_filename, "w", encoding="utf-8") as f:
+                f.write(f"考场座位号:{i}\n")
+                f.write(f"姓名:{stu.name}\n")
+                f.write(f"学号:{stu.student_id}\n")
+        print(f"准考证文件已生成，共 {len(self.arranged_students)} 份，请查看 '{dirname}/' 文件夹。")
