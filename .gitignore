@@ -1,0 +1,5 @@
+.claude/
+__pycache__/
+*.pyc
+.DS_Store
+week6-第三次作业.docx
